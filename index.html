@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<title>TimeTunnel</title>
+</head>
+<body>
+	<div>
+		Rings: <input id="rings" value="7" type="number"></input>
+		Scale: <input id="scale" value="0.85" type="number" step="0.05"></input>
+		Y Center: <input id="center" value="500" type="number" step="10"></input>
+		Y Offset: <input id="offset" value="5" type="number" step="1"></input>
+		Height: <input id="height" value="900" type="number" step="20"></input>
+		People:<input type="checkbox" id="showPeople" checked="checked"/>
+	</div>
+
+	<canvas id="canvas" width="1200" height="800" style="background-color: black;"></canvas>
+
+	<img src="people.png" id="people"/>
+
+<script>
+var c = document.getElementById('canvas');
+var ctx = c.getContext('2d');
+
+
+
+
+function drawTunnel(){
+	var maxSize = [1100,$("#height").val()];
+	ctx.clearRect(0, 0, c.width, c.height);
+	var nextColor = "white";
+	for (var i=0; i<=$("#rings").val()*2; i++){
+		var scale = Math.pow($("#scale").val(),i);
+		var yOffset = $("#offset").val()*i;
+		drawEllipse(maxSize[0]*scale, maxSize[1]*scale,yOffset, nextColor);
+		nextColor = nextColor=="white"?"black":"white";
+	}
+	$("#showPeople").click(function(){
+            if($(this).is(":checked")){
+                $("#people").show();
+            }else{
+                $("#people").hide();
+			}
+		});
+}
+
+function drawEllipse(width,height,yOffset,color){
+	console.log(yOffset);
+	ctx.fillStyle = color;
+	ctx.beginPath();
+	ctx.ellipse(600, parseInt($("#center").val())+yOffset, width/2, height/2, 0, 0, 2 * Math.PI);
+	ctx.fill();
+}
+$(drawTunnel);
+$("#rings").change(drawTunnel);
+$("#scale").change(drawTunnel);
+$("#center").change(drawTunnel);
+$("#offset").change(drawTunnel);
+$("#height").change(drawTunnel);
+
+
+
+</script>
+
+<style>
+*{
+	font-family:sans-serif;
+}
+input{
+	width:50px;
+}
+canvas{
+	margin-top:10px;
+}
+#people{
+	position:absolute;
+	height:600px;
+	top:300px;
+	left:400px;
+}
+</style>
+	
+</body>
+</html>
